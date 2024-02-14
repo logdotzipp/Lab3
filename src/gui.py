@@ -35,97 +35,97 @@ def send_message(axes, canvas, tk_root):
     """
 
     try:
-            
-            # Clear the current plot
+        
+        # Clear the current plot
 #             axes.clear()
 #             canvas.draw()
-            
-            # Flush all the waiting data in the COM port
-            ser.flushInput()
+        
+        # Flush all the waiting data in the COM port
+        ser.flushInput()
 
-            # Write a Cntrl C and Cntrl D to restart the controller
-    #         ser.write(b'\x03')
-    #         ser.write(b'\x04')
-            while True:    
+        # Write a Cntrl C and Cntrl D to restart the controller
+#         ser.write(b'\x03')
+#         ser.write(b'\x04')
+        while True:    
+            try:
+                Kp_in = input("Input Kp:") 
+                Kp_in = float(Kp_in)
+                break
+            except ValueError:
+                print ("Invalid Kp. Try again.")
+        Kp = str(Kp_in) + '\n'
+        
+        ser.write(Kp.encode())
+        
+        # Setup lists in which to store data points
+        xvals = []
+        yvals = []
+
+        # Wait for data to be recieved from microcontroller
+        print("PC - Waiting for Data Transfer...")
+        while True:
+            
+            # Check for start message from microcontroller
+            line = waitforstring()
+            if (line == "Start Data Transfer"):
+                break
+            else:
+                print("Microcontroller - " + line)
+                continue
+               
+        # The first line should be the headers for plot axes
+        firstLine = waitforstring()
+        labels = firstLine.split(",")
+        print("PC - Captured Header Line")
+        
+        # Wait for remaining data points to appear
+        while True:
+            # Read current line
+            currentLine = waitforstring()
+            
+            # If the end block occurs, break
+            if (currentLine != "End"):
+                
+                
+                # Modify comma separated values to ensure uniformity
+                
+                # Strip any beginning/ending spaces
+                #moddedline = line.strip()
+                
+                # Replace all spaces with commas
+                moddedline = currentLine.replace(" ",",")
+            
+                # Split based on commas
+                strings = moddedline.split(",")
+                
+                
                 try:
-                    Kp_in = input("Input Kp:") 
-                    Kp_in = float(Kp_in)
-                    break
-                except ValueError:
-                    print ("Invalid Kp. Try again.")
-            Kp = str(Kp_in) + '\n'
-            
-            ser.write(Kp.encode())
-            
-            # Setup lists in which to store data points
-            xvals = []
-            yvals = []
-
-            # Wait for data to be recieved from microcontroller
-            print("PC - Waiting for Data Transfer...")
-            while True:
-                
-                # Check for start message from microcontroller
-                line = waitforstring()
-                if (line == "Start Data Transfer"):
-                    break
-                else:
-                    print("Microcontroller - " + line)
+                    # Convert to floating point numbers
+                    xpt = float(strings[0])
+                    ypt = float(strings[1])
+                    
+                    # Store only the first two data points            
+                    xvals.append(xpt)
+                    yvals.append(ypt)
+                    
+                except:
+                    print("PC - Read Error on data: " + currentLine)
                     continue
-                   
-            # The first line should be the headers for plot axes
-            firstLine = waitforstring()
-            labels = firstLine.split(",")
-            print("PC - Captured Header Line")
+            else:
+                print("PC - End Data Transfer")
+                break
             
-            # Wait for remaining data points to appear
-            while True:
-                # Read current line
-                currentLine = waitforstring()
-                
-                # If the end block occurs, break
-                if (currentLine != "End"):
-                    
-                    
-                    # Modify comma separated values to ensure uniformity
-                    
-                    # Strip any beginning/ending spaces
-                    #moddedline = line.strip()
-                    
-                    # Replace all spaces with commas
-                    moddedline = currentLine.replace(" ",",")
-                
-                    # Split based on commas
-                    strings = moddedline.split(",")
-                    
-                    
-                    try:
-                        # Convert to floating point numbers
-                        xpt = float(strings[0])
-                        ypt = float(strings[1])
-                        
-                        # Store only the first two data points            
-                        xvals.append(xpt)
-                        yvals.append(ypt)
-                        
-                    except:
-                        print("PC - Read Error on data: " + currentLine)
-                        continue
-                else:
-                    print("PC - End Data Transfer")
-                    break
-                
-                
-            # Data transfer complete
-            # Plot the data on the gui
-            plot_data(axes, canvas, xvals, yvals, labels, Kp_in)
-        
-        
             
+        # Data transfer complete
+        # Plot the data on the gui
+        plot_data(axes, canvas, xvals, yvals, labels, Kp_in)
+    
+    
+        
     except KeyboardInterrupt:
         print("Keyboard interrupt... Shutting Down")
         quitprgm(tk_root)
-       
+   
     except Exception as e:
         # general purpose error handling
         print(e)
