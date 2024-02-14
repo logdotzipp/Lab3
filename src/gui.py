@@ -35,12 +35,10 @@ def send_message(axes, canvas, tk_root):
     """
 
     try:
-        for i in range(1):
             
             # Clear the current plot
 #             axes.clear()
 #             canvas.draw()
-            
             
             # Flush all the waiting data in the COM port
             ser.flushInput()
