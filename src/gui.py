@@ -1,5 +1,5 @@
 """! @file gui.py
-This program creates a use GUI that graphs a RC circuit
+This program creates a use GUI that graphs a Proportional Controller
 response when step_response is called when the user
 selects "Run" and communicates with Microcontroller.
 Runs on PC
@@ -11,7 +11,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 
 
-ser = Serial("/dev/tty.usbmodem206B378239472", 115200)
+ser = Serial("COM3", 115200)
 
 # %%
 def waitforstring():
@@ -35,93 +35,92 @@ def send_message(axes, canvas, tk_root):
     """
 
     try:
-        
-        # Clear the current plot
-        axes.clear()
-        canvas.draw()
-        
-        
-        # Flush all the waiting data in the COM port
-        ser.flushInput()
+        for i in range(1):
+            
+            # Clear the current plot
+#             axes.clear()
+#             canvas.draw()
+            
+            
+            # Flush all the waiting data in the COM port
+            ser.flushInput()
 
-        # Write a Cntrl C and Cntrl D to restart the controller
-#         ser.write(b'\x03')
-#         ser.write(b'\x04')
-        while True:    
-            try:
-                Kp_in = input("Input Kp:") 
-                Kp_in = float(Kp_in)
-                break
-            except ValueError:
-                print ("Invalid Kp. Try again.")
-        Kp = str(Kp_in) + '\n'
-        
-        print(Kp.encode())
-        
-        ser.write(Kp.encode())
-        
-        # Setup lists in which to store data points
-        xvals = []
-        yvals = []
-    
-        # Wait for data to be recieved from microcontroller
-        print("PC - Waiting for Data Transfer...")
-        while True:
-            
-            # Check for start message from microcontroller
-            line = waitforstring()
-            if (line == "Start Data Transfer"):
-                break
-            else:
-                print("Microcontroller - " + line)
-                continue
-               
-        # The first line should be the headers for plot axes
-        firstLine = waitforstring()
-        labels = firstLine.split(",")
-        print("PC - Captured Header Line")
-        
-        # Wait for remaining data points to appear
-        while True:
-            # Read current line
-            currentLine = waitforstring()
-            
-            # If the end block occurs, break
-            if (currentLine != "End"):
-                
-                
-                # Modify comma separated values to ensure uniformity
-                
-                # Strip any beginning/ending spaces
-                #moddedline = line.strip()
-                
-                # Replace all spaces with commas
-                moddedline = currentLine.replace(" ",",")
-            
-                # Split based on commas
-                strings = moddedline.split(",")
-                
-                
+            # Write a Cntrl C and Cntrl D to restart the controller
+    #         ser.write(b'\x03')
+    #         ser.write(b'\x04')
+            while True:    
                 try:
-                    # Convert to floating point numbers
-                    xpt = float(strings[0])
-                    ypt = float(strings[1])
-                    
-                    # Store only the first two data points            
-                    xvals.append(xpt)
-                    yvals.append(ypt)
-                    
-                except:
-                    print("PC - Read Error on data: " + currentLine)
+                    Kp_in = input("Input Kp:") 
+                    Kp_in = float(Kp_in)
+                    break
+                except ValueError:
+                    print ("Invalid Kp. Try again.")
+            Kp = str(Kp_in) + '\n'
+            
+            ser.write(Kp.encode())
+            
+            # Setup lists in which to store data points
+            xvals = []
+            yvals = []
+
+            # Wait for data to be recieved from microcontroller
+            print("PC - Waiting for Data Transfer...")
+            while True:
+                
+                # Check for start message from microcontroller
+                line = waitforstring()
+                if (line == "Start Data Transfer"):
+                    break
+                else:
+                    print("Microcontroller - " + line)
                     continue
-            else:
-                print("PC - End Data Transfer")
-                break
+                   
+            # The first line should be the headers for plot axes
+            firstLine = waitforstring()
+            labels = firstLine.split(",")
+            print("PC - Captured Header Line")
             
-            
-        # Data transfer complete
-        # Plot the data on the gui
-        plot_data(axes, canvas, xvals, yvals, labels)
+            # Wait for remaining data points to appear
+            while True:
+                # Read current line
+                currentLine = waitforstring()
+                
+                # If the end block occurs, break
+                if (currentLine != "End"):
+                    
+                    
+                    # Modify comma separated values to ensure uniformity
+                    
+                    # Strip any beginning/ending spaces
+                    #moddedline = line.strip()
+                    
+                    # Replace all spaces with commas
+                    moddedline = currentLine.replace(" ",",")
+                
+                    # Split based on commas
+                    strings = moddedline.split(",")
+                    
+                    
+                    try:
+                        # Convert to floating point numbers
+                        xpt = float(strings[0])
+                        ypt = float(strings[1])
+                        
+                        # Store only the first two data points            
+                        xvals.append(xpt)
+                        yvals.append(ypt)
+                        
+                    except:
+                        print("PC - Read Error on data: " + currentLine)
+                        continue
+                else:
+                    print("PC - End Data Transfer")
+                    break
+                
+                
+            # Data transfer complete
+            # Plot the data on the gui
+            plot_data(axes, canvas, xvals, yvals, labels, Kp_in)
         
         
             
@@ -136,28 +135,17 @@ def send_message(axes, canvas, tk_root):
         
         
 #%%        
-def plot_data(plot_axes, plot_canvas,xvals,yvals,labels):
+def plot_data(plot_axes, plot_canvas,xvals,yvals,labels,Kp_in):
     """!
-    Function creates theoretical data points for RC circuit
-    and plots both the experimental and theoretical curves
+    Function plots both the experimental Proportional Controller Curve
     on the same plots.
     """
-    
-    # Create Theoretical Data Points
-#     xth = []
-#     yth = []
-#     i = 0
-#     for i in range(1990):
-#         xth.append(i)
-#         yth.append((3.3 * (1 - math.exp(-(i / 1000) / 0.33))))
-    
     # Plot the curves
-    plot_axes.clear()
-    plot_canvas.draw()
+#     plot_axes.clear()
+#     plot_canvas.draw()
     print("PC - Plotting Data...")
-    plot_axes.plot(xvals, yvals, '.')
-#     plot_axes.plot(xth, yth)
-    plot_axes.legend(['Experimental Capture'])
+    plot_axes.plot(xvals, yvals, label = f'Kp = {Kp_in}')
+    plot_axes.legend()
     plot_axes.set_xlabel(labels[0])
     plot_axes.set_ylabel(labels[1])
     plot_axes.grid(True)
@@ -182,11 +170,11 @@ def quitprgm(tk_root):
     print("----Program Terminated----")
 
 # %%
-def rc_response(title):
+def kc_response(title):
     """!
     Function creates GUI where the theoretical and experimental RC
     circuit curves are displayed. It also creates three buttons
-    where users can "Run" step_response to create the RC curves,
+    where users can "Run" step_response to creates a Proportional Controlller curve,
     "Clear" the plot or "Quit" the GUI program.
     """
     
@@ -227,4 +215,4 @@ def rc_response(title):
 
 # %%
 if __name__ == "__main__":
-    rc_response(title = "RC Response")
+    kc_response(title = "Proportional Control Response")
