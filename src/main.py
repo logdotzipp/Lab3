@@ -35,7 +35,7 @@ def motor_control():
                     break
         
         # Check if we've ran longer than 5 seconds (infinite oscillation)
-        if(timeVals[-1] > 5000):
+        if(timeVals[-1] > 2000):
             raise ValueError("Steady State Timeout")
         
         # Run control loop at ~100Hz
