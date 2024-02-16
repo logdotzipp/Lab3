@@ -1,3 +1,8 @@
+"""! @file main.py
+This program is a motor driver that moves a 12V Brushed DC Motor
+180 degrees using proportional control and a gain constant, Kp,
+input by user on GUI
+"""
 
 import pyb
 import utime
@@ -6,7 +11,9 @@ from motor_driver import MotorDriver
 from controller import Controller
 
 def motor_control():
-    
+"""! 
+Function sets motor speed, stores encoder values, and checks for steady state.
+"""
     while True:
         # read encoder
         currentPos = coder.read()

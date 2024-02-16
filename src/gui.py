@@ -1,7 +1,7 @@
 """! @file gui.py
-This program creates a use GUI that graphs a Proportional Controller
-response when step_response is called when the user
-selects "Run" and communicates with Microcontroller.
+This program creates a GUI that graphs a Proportional Controller
+motor response from main.py on the microcontroller. User specifies
+a Kp value and selects "Run" to prompt a response.
 Runs on PC
 """
 import tkinter
@@ -30,22 +30,18 @@ def waitforstring():
 # %%
 def send_message(axes, canvas, tk_root):
     """!
-    Function transfers data collected by step_response
-    when the function is called and plots data on the GUI.
+    Function allows user to set a Kp value and subsequently
+    recieves time and motor location values to plot.
     """
 
     try:
         
-        # Clear the current plot
-#             axes.clear()
-#             canvas.draw()
         
         # Flush all the waiting data in the COM port
         ser.flushInput()
 
-        # Write a Cntrl C and Cntrl D to restart the controller
-#         ser.write(b'\x03')
-#         ser.write(b'\x04')
+        # Prompt user to input a Kp value and check its
+        # validity. Then sends Kp to main program.
         while True:    
             try:
                 Kp_in = input("Input Kp:") 
@@ -135,7 +131,7 @@ def send_message(axes, canvas, tk_root):
 #%%        
 def plot_data(plot_axes, plot_canvas,xvals,yvals,labels,Kp_in):
     """!
-    Function plots both the experimental Proportional Controller Curve
+    Function plots all the experimental Proportional Controller Curves
     on the same plots.
     """
     # Plot the curves
