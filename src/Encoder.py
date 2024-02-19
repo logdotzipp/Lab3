@@ -21,8 +21,6 @@ class Encoder:
         @param timer Timer object used as a counter.
         @param CHA Timer Channel corresponding to Encoder Channel A.
         @param CHB Timer Channel corresponding to Encoder Channel B.
-        @param lastCount Stores the previous value of the encoder
-        @param totalCount Stores the current total value of the encoder
         """
         
         # Setup the encoder pins
@@ -44,8 +42,7 @@ class Encoder:
         Function reads the Encoder's position as a positive/negative integer.
         Accounts for under- and over-flow cases by comparing the most recent
         and current count from the Encoder.
-        @param count Current Encoder count.
-        @param d Difference between the current encoder reading and the previous encoder reading.
+        @returns Total encoder count as an integer
         """
         
         # Read the encoder counter

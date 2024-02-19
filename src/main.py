@@ -1,18 +1,20 @@
 """! @file main.py
-This program is a motor driver that moves a 12V Brushed DC Motor
-180 degrees using proportional control and a gain constant, Kp,
-input by user on GUI
+This main file awaits a proportional gain to arrive over serial, and then drives a 12V Pololu 37Dx70L 50:1 Gear motor
+connected to a nerf turret term project 180 degrees using a closed loop proportional controller class. The response is recorded
+and sent back over Serial to be plotted on a PC side GUI.
 """
 
 import pyb
 import utime
 from Encoder import Encoder
 from motor_driver import MotorDriver
-from controller import Controller
+from controller import PController
 
 def motor_control():
 """! 
-Function sets motor speed, stores encoder values, and checks for steady state.
+Sets motor speed using closed loop proportional postion control implemented with the PController class.
+Stores the encoder values of each step response in a list, and terminates the test when
+steady state has been achieved.
 """
     while True:
         # read encoder
@@ -56,7 +58,7 @@ if __name__ == "__main__":
     motor1 = MotorDriver(pyb.Pin.board.PC1, pyb.Pin.board.PA0, pyb.Pin.board.PA1, pyb.Timer(5, freq=20000))
     # Setup Encoder Object
     coder = Encoder(pyb.Pin.board.PC6, pyb.Pin.board.PC7, 8, 1, 2)
-    
+    # Setup the serial port
     usbvcp = pyb.USB_VCP()
     
     
@@ -65,30 +67,23 @@ if __name__ == "__main__":
         # Loop over mulitple Kp inputs
         while True:
             
-            # Get User Input
-#             while True:
-#                 try:
-#                     Kp = input("Enter a value of Kp:")
-#                     Kp = float(Kp)
-#                     break
-#                 except ValueError:
-#                     print("Input Error, Try Again")
-            
             print("awaiting msg")
             
+            # Wait for incoming data over serial
             while True:
                 Kp_b = usbvcp.readline()
                 if(Kp_b != None):
                     break
-
+            
+            # Serial data obtained, try to convert it to a float
             
             Kp = float(Kp_b)
             
             print(Kp)
             
             
-            # Setup proportional controller
-            cntrlr = Controller(Kp, 1200)
+            # Setup proportional controller for 180 degrees of rotation
+            cntrlr = PController(Kp, 1200)
             
             # Rezero the encoder
             coder.zero()

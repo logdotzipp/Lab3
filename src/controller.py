@@ -1,19 +1,22 @@
 """! @file controller.py
-This program is a proportional controller class that moves a
-12V Brushed DC Motor to a desired location. The class initializes a gain constant, Kp,
-and a desired motor location; and sets motor speed accordingly.
+This program contains a general purpose proportional controller class. The class initializes a gain constant, Kp,
+and a desired set point. When run() is repeatedly called, it calculates the error in the system and applies the
+proportional gain to it.
 """
 
-class Controller:
+class PController:
     """!
-    The class initializes a gain constant, Kp,
-    and a desired motor location; and sets motor speed accordingly.
+    The class initializes a proportional gain constant, Kp,
+    and a desired setpoint for a system.
+    When feedback is applied through the run() method, the error in the system is calculated,
+    and the proportional gain is applied. Rapidly and repeatedly calling run() enables one to
+    create a closed loop proportional controller.
     """
     def __init__(self, Kp, setPoint):
         """! 
-        This function initializes motor gain constant and desired encoder count
+        This function initializes the proportional gain constant and desired setpoint
         @param Kp User specified proportional gain constant.
-        @param setPoint The encoder count of the desired motor location.
+        @param setPoint Desired setpoint for the system to be driven to.
         """
 
         self.Kp = Kp
@@ -21,9 +24,11 @@ class Controller:
         
     def run(self, actualVal):
         """!
-        This function handles proportional control by comparing current motor
-        location to the desired location and sets duty cycle accordingly.
-        @param actualVal The current encoder count.
+        This function handles proportional control by comparing the current system value
+        to the desired set point, and then computing the error. The error is then multiplied by
+        the gain Kp to obtain proportional control.
+        @param actualVal The measured current value of the system.
+        @returns The output to be sent to the system driver as a float. (For a motor system, this is the PWM duty cycle percentage to be sent to the motor)
         """    
        
         # Compare actual to setpoint to find the error
@@ -35,12 +40,14 @@ class Controller:
 
     def set_setpoint(self, setPt):
         """!
-        This function sets the desired motor location.
+        This function sets the desired setpoint.
+        @param setPt The new desired setpoint of the system.
         """ 
         self.setPoint = setPt
         
     def set_Kp(self, Kp):
         """!
         This function sets the user input gain.
+        @param Kp The new proportional gain value.
         """ 
         self.Kp = Kp

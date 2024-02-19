@@ -19,6 +19,7 @@ def waitforstring():
     Function checks if there is data waiting inside
     the Serial port and if so, reads the data and
     converts it to a string.
+    @returns Decoded line from the serial port as a string
     """
     while True:
         if (ser.in_waiting != 0):
@@ -32,6 +33,9 @@ def send_message(axes, canvas, tk_root):
     """!
     Function allows user to set a Kp value and subsequently
     recieves time and motor location values to plot.
+    @axes Active axes on which data is to be plotted
+    @canvas Active canvas on which GUI is being displayed
+    @tk_root Tkinter root object which controls the active GUI
     """
 
     try:
@@ -133,6 +137,12 @@ def plot_data(plot_axes, plot_canvas,xvals,yvals,labels,Kp_in):
     """!
     Function plots all the experimental Proportional Controller Curves
     on the same plots.
+    @param plot_axes Active axes on which data is to be plotted
+    @param plot_canvas Active canvas on which GUI is being displayed
+    @param xvals List of values to be plotted as the xaxis
+    @param yvals List of values to be plotted as the xaxis
+    @param labels List of strings to be used as the axes labels (Only first two strings used)
+    @param Kp_in Current value of Kp to added to the legend
     """
     # Plot the curves
 #     plot_axes.clear()
@@ -151,6 +161,7 @@ def quitprgm(tk_root):
     """!
     Function clears and closes Serial port and closes
     GUI window.
+    @param tk_root Tkinter root object to be closed
     """
     
     # Flush Serial Port of data
@@ -164,12 +175,13 @@ def quitprgm(tk_root):
     print("----Program Terminated----")
 
 # %%
-def kc_response(title):
+def kp_response(title):
     """!
-    Function creates GUI where the theoretical and experimental RC
-    circuit curves are displayed. It also creates three buttons
-    where users can "Run" step_response to creates a Proportional Controlller curve,
-    "Clear" the plot or "Quit" the GUI program.
+    Function creates GUI where the measured step responses can be plotted. 
+    It also creates three buttons where users can "Run" step_response to 
+    create a Proportional Controller curve,"Clear" the plot or "Quit" the 
+    GUI program.
+    @param String to be used as the plot title
     """
     
     try:
@@ -209,4 +221,4 @@ def kc_response(title):
 
 # %%
 if __name__ == "__main__":
-    kc_response(title = "Proportional Control Response")
+    kp_response(title = "Proportional Control Response")
