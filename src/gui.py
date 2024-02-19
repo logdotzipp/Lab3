@@ -33,9 +33,9 @@ def send_message(axes, canvas, tk_root):
     """!
     Function allows user to set a Kp value and subsequently
     recieves time and motor location values to plot.
-    @axes Active axes on which data is to be plotted
-    @canvas Active canvas on which GUI is being displayed
-    @tk_root Tkinter root object which controls the active GUI
+    @param axes Active axes on which data is to be plotted
+    @param canvas Active canvas on which GUI is being displayed
+    @param tk_root Tkinter root object which controls the active GUI
     """
 
     try:
@@ -181,7 +181,7 @@ def kp_response(title):
     It also creates three buttons where users can "Run" step_response to 
     create a Proportional Controller curve,"Clear" the plot or "Quit" the 
     GUI program.
-    @param String to be used as the plot title
+    @param title String to be used as the plot title
     """
     
     try:

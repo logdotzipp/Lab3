@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.10.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Lab 3: Proportional Controller: src/main.py File Reference</title>
+<title>Lab 3: Proportional Controller: C:/Users/canny/OneDrive/Desktop/ME_405/lab3/src/main.py File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,14 +68,13 @@ $(function(){initNavTree('main_8py.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 
-<p>This program is a motor driver that moves a 12V Brushed DC Motor 180 degrees using proportional control and a gain constant, Kp, input by user on GUI.  
+<p>This main file awaits a proportional gain to arrive over serial, and then drives a 12V Pololu 37Dx70L 50:1 Gear motor connected to a nerf turret term project 180 degrees using a closed loop proportional controller class.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4821432ad05381a331e2c681d5af2b71" id="r_a4821432ad05381a331e2c681d5af2b71"><td class="memItemLeft" align="right" valign="top"><a id="a4821432ad05381a331e2c681d5af2b71" name="a4821432ad05381a331e2c681d5af2b71"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>main.motor_control</b> ()</td></tr>
-<tr class="memdesc:a4821432ad05381a331e2c681d5af2b71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function sets motor speed, stores encoder values, and checks for steady state. <br /></td></tr>
+<tr class="memitem:a4821432ad05381a331e2c681d5af2b71" id="r_a4821432ad05381a331e2c681d5af2b71"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4821432ad05381a331e2c681d5af2b71">main.motor_control</a> ()</td></tr>
+<tr class="memdesc:a4821432ad05381a331e2c681d5af2b71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets motor speed using closed loop proportional postion control implemented with the PController class.  <br /></td></tr>
 <tr class="separator:a4821432ad05381a331e2c681d5af2b71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
@@ -96,7 +95,7 @@ Variables</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>main.Kp</b> = float(Kp_b)</td></tr>
 <tr class="separator:a62bb069cc916457d26d7121c79cf94ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc8854c2d1038ee53fa7e6be7b57e7c1" id="r_afc8854c2d1038ee53fa7e6be7b57e7c1"><td class="memItemLeft" align="right" valign="top"><a id="afc8854c2d1038ee53fa7e6be7b57e7c1" name="afc8854c2d1038ee53fa7e6be7b57e7c1"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>main.cntrlr</b> = <a class="el" href="classcontroller_1_1_controller.html">Controller</a>(Kp, 1200)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>main.cntrlr</b> = <a class="el" href="classcontroller_1_1_p_controller.html">PController</a>(Kp, 1200)</td></tr>
 <tr class="separator:afc8854c2d1038ee53fa7e6be7b57e7c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c428e5c081a9ddb6d79d38e9a3e35da" id="r_a6c428e5c081a9ddb6d79d38e9a3e35da"><td class="memItemLeft" align="right" valign="top"><a id="a6c428e5c081a9ddb6d79d38e9a3e35da" name="a6c428e5c081a9ddb6d79d38e9a3e35da"></a>
 list&#160;</td><td class="memItemRight" valign="bottom"><b>main.timeVals</b> = []</td></tr>
@@ -112,8 +111,30 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>main.lookback</b> = 50
 <tr class="separator:a0137fedf9ad923e18f4c390b2b0797a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This program is a motor driver that moves a 12V Brushed DC Motor 180 degrees using proportional control and a gain constant, Kp, input by user on GUI. </p>
-</div></div><!-- contents -->
+<div class="textblock"><p>This main file awaits a proportional gain to arrive over serial, and then drives a 12V Pololu 37Dx70L 50:1 Gear motor connected to a nerf turret term project 180 degrees using a closed loop proportional controller class. </p>
+<p>The response is recorded and sent back over Serial to be plotted on a PC side GUI. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a4821432ad05381a331e2c681d5af2b71" name="a4821432ad05381a331e2c681d5af2b71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4821432ad05381a331e2c681d5af2b71">&#9670;&#160;</a></span>motor_control()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">main.motor_control </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets motor speed using closed loop proportional postion control implemented with the PController class. </p>
+<p>Stores the encoder values of each step response in a list, and terminates the test when steady state has been achieved. </p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
