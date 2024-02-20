@@ -12,10 +12,10 @@
  The handshaking between the two programs is set up to allow for repeated tests with varied values of Kp to determine the optimal control gain.
 
  ![Step](https://github.com/logdotzipp/Lab3/assets/156237159/b62b3f7e-5456-4a53-9112-9190b8967856)
-Figure 1: Step response of the motor to varied values of Kp
+ Figure 1: Step response of the motor to varied values of Kp
 
 ![Zoomed](https://github.com/logdotzipp/Lab3/assets/156237159/dc6ca88c-0c72-4d75-a4e7-840578007e54)
-Figure 2: Zoomed view of Figure 1 to analyze transient behavior. Low values of Kp (0.05, 0.1) result in undershoot and high steady state error. Relatively high values of Kp (1.0, 3.0) result in overshoot and oscillation.
+ Figure 2: Zoomed view of Figure 1 to analyze transient behavior. Low values of Kp (0.05, 0.1) result in undershoot and high steady state error. Relatively high values of Kp (1.0, 3.0) result in overshoot and oscillation.
 
 ![KP0_16](https://github.com/logdotzipp/Lab3/assets/156237159/583a4e1f-c114-4b3a-9e5a-1605131d18d7)
-Figure 3: Optimized proportional gain of 0.16 results in no overshoot and low steady state error.
+ Figure 3: Optimized proportional gain of 0.16 results in no overshoot and low steady state error.
